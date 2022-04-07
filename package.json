@@ -1,0 +1,12 @@
+{
+  "name": "code_check",
+  "version": "1.0.0",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "process": "^0.11.10",
+    "shell": "^0.9.4"
+  },
+  "devDependencies": {
+    "node-cmd": "^5.0.0"
+  }
+}
