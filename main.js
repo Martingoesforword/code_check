@@ -11,36 +11,54 @@ var warrings = [];
 
 // 可配置过滤器组合：向过滤器传入参数
 var filterConfig = {
-    "==使用错误": 1,
+    "==使用警告": 1,
+    "todo未做内容警告": 1,
 };
 
 //定义过滤器
 var filters = {
-    "==使用错误": {
+    "==使用警告": {
         fileType: function (type) {
             if({"cpp": 1,
                 "c": 1,
                 "hpp": 1,
                 "h": 1,
-                "cc": 1}[type]) {
+                "cc": 1,
+                "js": 1,
+                "ts": 1,
+            }[type]) {
                 return 1;
-            }
-        },
-        errorDesc: function (fileInfo) {
-            var fileName = fileInfo["filename"];
-            return fileName+" is error in == problem";
-        },
-        errorMatch: function (fileContent) {
-            if(fileContent.match(/f/)) {
-                return true;
             }
         },
         warringDesc: function (fileInfo) {
             var fileName = fileInfo["fileName"];
-            return fileName+" is warring in == problem";
+            return fileName+" is warring in ==可能用作赋值语句";
         },
         warringMatch: function (fileContent) {
-            if(fileContent.match(/af/)) {
+            if(fileContent.match(/==/)) {
+                return true;
+            }
+        }
+    },
+    "todo未做内容警告": {
+        fileType: function (type) {
+            if({"cpp": 1,
+                "c": 1,
+                "hpp": 1,
+                "h": 1,
+                "cc": 1,
+                "js": 1,
+                "ts": 1,
+            }[type]) {
+                return 1;
+            }
+        },
+        warringDesc: function (fileInfo) {
+            var fileName = fileInfo["fileName"];
+            return fileName+" is warring in todo未做内容警告";
+        },
+        warringMatch: function (fileContent) {
+            if(fileContent.match(/todo:/)) {
                 return true;
             }
         }
@@ -50,9 +68,10 @@ var filters = {
 
 // 对某种文件名，文件大小等信息实现自定义劫持操作，或者通用劫持操作
 changeFiles.forEach((filePath)=>{
+    if(!filePath.length) return;
     var fileContent = fs.readFileSync(filePath, {encoding:"utf8"});
     var filetype = "";
-    for (let i = filePath.length; i >= 0 ; i--) {
+    for (let i = filePath.length-1; i >= 0 ; i--) {
         if(filePath[i] === '.') {
             break;
         }
