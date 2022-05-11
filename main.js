@@ -69,6 +69,7 @@ var filters = {
 // 对某种文件名，文件大小等信息实现自定义劫持操作，或者通用劫持操作
 changeFiles.forEach((filePath)=>{
     if(!filePath.length) return;
+    var fileName = filePath;
     var fileContent = fs.readFileSync(filePath, {encoding:"utf8"});
     var filetype = "";
     for (let i = filePath.length-1; i >= 0 ; i--) {
@@ -89,10 +90,10 @@ changeFiles.forEach((filePath)=>{
         //筛选文件类型
         if(filter.fileType(filetype)) {
             if(filter.errorMatch && filter.errorMatch(fileContent)) {
-                errors.push(filter.errorDesc({fileName:filePath}));
+                errors.push(filter.errorDesc({fileName:fileName}));
             }
             if(filter.warringMatch && filter.warringMatch(fileContent)) {
-                errors.push(filter.warringDesc({fileName:filePath}));
+                errors.push(filter.warringDesc({fileName:fileName}));
             }
         }
     }
